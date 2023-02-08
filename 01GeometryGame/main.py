@@ -1,4 +1,7 @@
 from random import randint
+import turtle
+
+
 
 class Point:
 
@@ -15,7 +18,6 @@ class Point:
 
 
 class Rectangle:
-
     def __init__(self, point1, point2):
         self.point1 = point1
         self.point2 = point2
@@ -24,22 +26,45 @@ class Rectangle:
         return (self.point2.x - self.point1.x) * \
                (self.point2.y - self.point1.y)
 
+class GUIRectangle(Rectangle):
+    def draw(self,canvas):
+        canvas.penup()
+        canvas.goto(self.point1.x,self.point1.y)
+        canvas.pendown()
+        canvas.forward(self.point2.x - self.point1.x)
+        canvas.left(90)
+        canvas.forward(self.point2.y - self.point1.y)
+        canvas.left(90)
+        canvas.forward(self.point2.x - self.point1.x)
+        canvas.left(90)
+        canvas.forward(self.point2.y - self.point1.y)
+
+class GUIPoint(Point):
+    def draw(self, canvas, size = 5, color = "red"):
+        canvas.penup()
+        canvas.goto(self.x, self.y)
+        canvas.pendown()
+        canvas.dot(size, color)
+
+guiRectangle = GUIRectangle(Point(randint(0, 100), randint(0, 100)),Point(randint(200, 300), randint(200, 300)))
+myTurtle = turtle.Turtle()
 
 # Create rectangle object
-rectangle = Rectangle(Point(randint(0, 9), randint(0, 9)),
-              Point(randint(10, 19), randint(10, 19)))
-
 # Print rectangle coordinates
 print("Rectangle Coordinates: ",
-      rectangle.point1.x, ",",
-      rectangle.point1.y, "and",
-      rectangle.point2.x, ",",
-      rectangle.point2.y)
+      guiRectangle.point1.x, ",",
+      guiRectangle.point1.y, "and",
+      guiRectangle.point2.x, ",",
+      guiRectangle.point2.y)
 
 # Get point and area from user
-user_point = Point(float(input("Guess x: ")), float(input("Guess y: ")))
+user_point = GUIPoint(float(input("Guess x: ")), float(input("Guess y: ")))
 user_area = float(input("Guess rectangle area: "))
 
 # Print out the game result
-print("Your point was inside rectangle: ", user_point.falls_in_rectangle(rectangle))
-print("Your area was off by: ", rectangle.area() - user_area)
+print("Your point was inside rectangle: ", user_point.falls_in_rectangle(guiRectangle))
+print("Your area was off by: ", guiRectangle.area() - user_area)
+
+guiRectangle.draw(myTurtle)
+user_point.draw(myTurtle)
+turtle.done()
